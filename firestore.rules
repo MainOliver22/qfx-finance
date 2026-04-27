@@ -1,0 +1,111 @@
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * QFX Finance Security Rules
+     * 
+     * Core Philosophy: This ruleset enforces a strict user-ownership model.
+     * All sensitive financial data is structurally segregated under individual user paths.
+     */
+
+    // --- Helper Functions ---
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // --- Global Collection Matches (Necessary for Queries) ---
+
+    match /{path=**}/fiatTransactions/{transactionId} {
+      allow read: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+    }
+
+    match /{path=**}/cryptoHoldings/{holdingId} {
+      allow read: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+    }
+
+    match /{path=**}/cryptoTransactions/{transactionId} {
+      allow read: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+    }
+
+    match /{path=**}/botTrades/{tradeId} {
+      allow read: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+    }
+
+    // --- Standard Hierarchical Rules ---
+
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false; 
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isOwner(userId);
+      allow delete: if false;
+
+      match /fiatAccounts/{fiatAccountId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update, delete: if isOwner(userId);
+
+        match /fiatTransactions/{transactionId} {
+          allow get, list: if isOwner(userId);
+          allow create: if isOwner(userId) && request.resource.data.userId == userId;
+          allow update, delete: if false;
+        }
+      }
+
+      match /cryptoWallets/{walletId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update, delete: if isOwner(userId);
+
+        match /cryptoHoldings/{holdingId} {
+          allow get, list: if isOwner(userId);
+          allow create, update, delete: if isOwner(userId);
+        }
+
+        match /cryptoTransactions/{transactionId} {
+          allow get, list: if isOwner(userId);
+          allow create: if isOwner(userId) && request.resource.data.userId == userId;
+          allow update, delete: if false;
+        }
+      }
+
+      match /tradingBots/{botId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update, delete: if isOwner(userId);
+
+        match /botTrades/{tradeId} {
+          allow get, list: if isOwner(userId);
+          allow create: if isOwner(userId);
+          allow update, delete: if false;
+        }
+      }
+
+      match /userInvestments/{investmentId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update: if isOwner(userId);
+        allow delete: if false;
+      }
+
+      match /walletConnections/{connectionId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update, delete: if isOwner(userId);
+      }
+    }
+
+    match /investmentPackages/{packageId} {
+      allow get, list: if isSignedIn();
+      allow create, update, delete: if false;
+    }
+
+  }
+}

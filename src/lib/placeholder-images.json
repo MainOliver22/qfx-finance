@@ -1,0 +1,16 @@
+{
+  "placeholderImages": [
+    {
+      "id": "avatar-1",
+      "description": "User profile avatar",
+      "imageUrl": "https://picsum.photos/seed/user1/200/200",
+      "imageHint": "profile avatar"
+    },
+    {
+      "id": "dashboard-hero",
+      "description": "Dashboard overview background",
+      "imageUrl": "https://picsum.photos/seed/finance/1200/400",
+      "imageHint": "finance dashboard"
+    }
+  ]
+}

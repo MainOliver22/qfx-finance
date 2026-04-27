@@ -1,0 +1,912 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the QFX Finance platform, extending authentication with KYC profile information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        },
+        "username": {
+          "type": "string",
+          "description": "A unique username chosen by the user."
+        },
+        "fullName": {
+          "type": "string",
+          "description": "The full name of the user."
+        },
+        "phone": {
+          "type": "string",
+          "description": "The user's phone number."
+        },
+        "avatarUrl": {
+          "type": "string",
+          "description": "URL to the user's profile avatar.",
+          "format": "uri"
+        },
+        "kycStatus": {
+          "type": "string",
+          "description": "The Know Your Customer (KYC) verification status of the user.",
+          "format": "enum"
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "description": "The user's date of birth.",
+          "format": "date"
+        },
+        "address": {
+          "type": "string",
+          "description": "The user's physical address."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the user account was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the user account was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "username",
+        "fullName",
+        "kycStatus",
+        "dateOfBirth",
+        "address",
+        "createdAt"
+      ]
+    },
+    "FiatAccount": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "FiatAccount",
+      "type": "object",
+      "description": "Represents a traditional banking (fiat) account held by a user on the platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the FiatAccount entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this fiat account. (Relationship: User 1:N FiatAccount)"
+        },
+        "accountType": {
+          "type": "string",
+          "description": "The type of the fiat account (e.g., checking, savings).",
+          "format": "enum"
+        },
+        "accountNumber": {
+          "type": "string",
+          "description": "The unique account number for the fiat account."
+        },
+        "balance": {
+          "type": "number",
+          "description": "The current balance of the fiat account."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency of the fiat account (e.g., USD).",
+          "format": "enum"
+        },
+        "status": {
+          "type": "string",
+          "description": "The current operational status of the fiat account (e.g., active, suspended)."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the fiat account was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "accountType",
+        "accountNumber",
+        "balance",
+        "currency",
+        "status",
+        "createdAt"
+      ]
+    },
+    "FiatTransaction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "FiatTransaction",
+      "type": "object",
+      "description": "Records a transaction made through a fiat account.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the FiatTransaction entity."
+        },
+        "accountId": {
+          "type": "string",
+          "description": "Reference to the FiatAccount involved in this transaction. (Relationship: FiatAccount 1:N FiatTransaction)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who initiated or is affected by this transaction. (Relationship: User 1:N FiatTransaction)"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of fiat transaction (e.g., deposit, withdrawal, transfer).",
+          "format": "enum"
+        },
+        "amount": {
+          "type": "number",
+          "description": "The amount of money involved in the transaction."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the transaction."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the transaction (e.g., pending, completed, failed)."
+        },
+        "counterpartyName": {
+          "type": "string",
+          "description": "The name of the other party involved in the transaction."
+        },
+        "counterpartyAccount": {
+          "type": "string",
+          "description": "The account number of the other party involved in the transaction."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the transaction was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "accountId",
+        "userId",
+        "type",
+        "amount",
+        "description",
+        "status",
+        "createdAt"
+      ]
+    },
+    "CryptoWallet": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CryptoWallet",
+      "type": "object",
+      "description": "Represents a cryptocurrency wallet managed or tracked by the user on the platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the CryptoWallet entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this crypto wallet. (Relationship: User 1:N CryptoWallet)"
+        },
+        "walletAddress": {
+          "type": "string",
+          "description": "The public address of the cryptocurrency wallet."
+        },
+        "chain": {
+          "type": "string",
+          "description": "The blockchain network this wallet operates on (e.g., ETH, BSC, POLYGON).",
+          "format": "enum"
+        },
+        "label": {
+          "type": "string",
+          "description": "A user-defined label or name for the wallet."
+        },
+        "balance": {
+          "type": "number",
+          "description": "The total estimated balance of the wallet in a base currency (e.g., USD)."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the crypto wallet record was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "walletAddress",
+        "chain",
+        "label",
+        "balance",
+        "createdAt"
+      ]
+    },
+    "CryptoHolding": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CryptoHolding",
+      "type": "object",
+      "description": "Represents a specific cryptocurrency token held within a user's crypto wallet.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the CryptoHolding entity."
+        },
+        "walletId": {
+          "type": "string",
+          "description": "Reference to the CryptoWallet holding this token. (Relationship: CryptoWallet 1:N CryptoHolding)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this holding. (Relationship: User 1:N CryptoHolding)"
+        },
+        "tokenSymbol": {
+          "type": "string",
+          "description": "The ticker symbol of the cryptocurrency token (e.g., BTC, ETH, USDT).",
+          "format": "enum"
+        },
+        "tokenName": {
+          "type": "string",
+          "description": "The full name of the cryptocurrency token."
+        },
+        "balance": {
+          "type": "number",
+          "description": "The quantity of the token held."
+        },
+        "avgBuyPrice": {
+          "type": "number",
+          "description": "The average price at which the tokens were acquired."
+        },
+        "currentPrice": {
+          "type": "number",
+          "description": "The current market price of the token."
+        },
+        "pnl": {
+          "type": "number",
+          "description": "Profit and Loss for this holding, calculated from avgBuyPrice and currentPrice."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "description": "Timestamp when this holding's data (e.g., current price, PnL) was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "walletId",
+        "userId",
+        "tokenSymbol",
+        "tokenName",
+        "balance",
+        "avgBuyPrice",
+        "currentPrice",
+        "pnl",
+        "lastUpdated"
+      ]
+    },
+    "CryptoTransaction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CryptoTransaction",
+      "type": "object",
+      "description": "Records a cryptocurrency transaction, such as a buy, sell, transfer, or swap.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the CryptoTransaction entity."
+        },
+        "walletId": {
+          "type": "string",
+          "description": "Reference to the CryptoWallet involved in this transaction. (Relationship: CryptoWallet 1:N CryptoTransaction)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who initiated or is affected by this transaction. (Relationship: User 1:N CryptoTransaction)"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of cryptocurrency transaction (e.g., buy, sell, transfer, swap).",
+          "format": "enum"
+        },
+        "tokenSymbol": {
+          "type": "string",
+          "description": "The ticker symbol of the cryptocurrency token involved."
+        },
+        "amount": {
+          "type": "number",
+          "description": "The quantity of the token transacted."
+        },
+        "priceAtExecution": {
+          "type": "number",
+          "description": "The price of the token at the time of transaction execution."
+        },
+        "totalValue": {
+          "type": "number",
+          "description": "The total value of the transaction in a base currency (e.g., USD)."
+        },
+        "txHash": {
+          "type": "string",
+          "description": "The transaction hash, a unique identifier on the blockchain."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the blockchain transaction (e.g., pending, confirmed, failed)."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the crypto transaction was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "walletId",
+        "userId",
+        "type",
+        "tokenSymbol",
+        "amount",
+        "priceAtExecution",
+        "totalValue",
+        "txHash",
+        "status",
+        "createdAt"
+      ]
+    },
+    "TradingBot": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "TradingBot",
+      "type": "object",
+      "description": "Configuration and status for an automated cryptocurrency trading bot created by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the TradingBot entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this trading bot. (Relationship: User 1:N TradingBot)"
+        },
+        "name": {
+          "type": "string",
+          "description": "A user-defined name for the trading bot."
+        },
+        "strategy": {
+          "type": "string",
+          "description": "The trading strategy employed by the bot (e.g., DCA, grid, arbitrage, momentum).",
+          "format": "enum"
+        },
+        "status": {
+          "type": "string",
+          "description": "The current operational status of the trading bot (e.g., active, paused, stopped).",
+          "format": "enum"
+        },
+        "tradingPair": {
+          "type": "string",
+          "description": "The cryptocurrency trading pair the bot operates on (e.g., BTC/USD)."
+        },
+        "investmentAmount": {
+          "type": "number",
+          "description": "The total amount invested in this bot's strategy."
+        },
+        "frequency": {
+          "type": "string",
+          "description": "The frequency at which the bot executes trades (e.g., daily, hourly, continuous)."
+        },
+        "takeProfitPct": {
+          "type": "number",
+          "description": "The percentage profit target at which the bot should sell."
+        },
+        "stopLossPct": {
+          "type": "number",
+          "description": "The percentage loss threshold at which the bot should sell to limit losses."
+        },
+        "totalProfit": {
+          "type": "number",
+          "description": "The total profit generated by the bot since its inception."
+        },
+        "totalTrades": {
+          "type": "number",
+          "description": "The total number of trades executed by the bot."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the trading bot was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the trading bot's configuration or status was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "name",
+        "strategy",
+        "status",
+        "tradingPair",
+        "investmentAmount",
+        "frequency",
+        "takeProfitPct",
+        "stopLossPct",
+        "totalProfit",
+        "totalTrades",
+        "createdAt"
+      ]
+    },
+    "BotTrade": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "BotTrade",
+      "type": "object",
+      "description": "Records an individual trade executed by an automated trading bot.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the BotTrade entity."
+        },
+        "botId": {
+          "type": "string",
+          "description": "Reference to the TradingBot that executed this trade. (Relationship: TradingBot 1:N BotTrade)"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of trade executed (e.g., buy, sell).",
+          "format": "enum"
+        },
+        "amount": {
+          "type": "number",
+          "description": "The quantity of the asset traded."
+        },
+        "price": {
+          "type": "number",
+          "description": "The execution price of the trade."
+        },
+        "profit": {
+          "type": "number",
+          "description": "The profit or loss generated by this specific trade."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the trade (e.g., executed, pending, failed)."
+        },
+        "executedAt": {
+          "type": "string",
+          "description": "Timestamp when the trade was executed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "botId",
+        "type",
+        "amount",
+        "price",
+        "profit",
+        "status",
+        "executedAt"
+      ]
+    },
+    "InvestmentPackage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "InvestmentPackage",
+      "type": "object",
+      "description": "Defines a pre-configured investment offering available to users on the platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the InvestmentPackage entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the investment package (e.g., 'Stable Yield Fund')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the investment package."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of investment package (e.g., staking, yield farming, fixed deposit).",
+          "format": "enum"
+        },
+        "apyRate": {
+          "type": "number",
+          "description": "The Annual Percentage Yield (APY) offered by the package."
+        },
+        "minAmount": {
+          "type": "number",
+          "description": "The minimum investment amount required for this package."
+        },
+        "maxAmount": {
+          "type": "number",
+          "description": "The maximum investment amount allowed for this package."
+        },
+        "lockPeriodDays": {
+          "type": "number",
+          "description": "The number of days the investment is locked."
+        },
+        "riskLevel": {
+          "type": "string",
+          "description": "The assessed risk level of the investment package (e.g., low, medium, high).",
+          "format": "enum"
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the package (e.g., active, discontinued)."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "type",
+        "apyRate",
+        "minAmount",
+        "maxAmount",
+        "lockPeriodDays",
+        "riskLevel",
+        "status"
+      ]
+    },
+    "UserInvestment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserInvestment",
+      "type": "object",
+      "description": "Records a user's enrollment and participation in an InvestmentPackage.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UserInvestment entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who made this investment. (Relationship: User 1:N UserInvestment)"
+        },
+        "packageId": {
+          "type": "string",
+          "description": "Reference to the InvestmentPackage the user enrolled in. (Relationship: InvestmentPackage 1:N UserInvestment)"
+        },
+        "amountInvested": {
+          "type": "number",
+          "description": "The amount of money or crypto invested by the user."
+        },
+        "startDate": {
+          "type": "string",
+          "description": "The date when the investment started.",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "The expected or actual end date of the investment period.",
+          "format": "date-time"
+        },
+        "expectedReturn": {
+          "type": "number",
+          "description": "The projected return on investment based on the package's terms."
+        },
+        "actualReturn": {
+          "type": "number",
+          "description": "The actual return received from the investment upon completion or withdrawal."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the user's investment (e.g., active, completed, withdrawn).",
+          "format": "enum"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the user investment record was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "packageId",
+        "amountInvested",
+        "startDate",
+        "endDate",
+        "expectedReturn",
+        "status",
+        "createdAt"
+      ]
+    },
+    "WalletConnection": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "WalletConnection",
+      "type": "object",
+      "description": "Records a user's connection to an external Web3 wallet (e.g., MetaMask).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the WalletConnection entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this wallet connection. (Relationship: User 1:N WalletConnection)"
+        },
+        "walletType": {
+          "type": "string",
+          "description": "The type of Web3 wallet connected (e.g., metamask, walletconnect, coinbase).",
+          "format": "enum"
+        },
+        "walletAddress": {
+          "type": "string",
+          "description": "The public address of the connected Web3 wallet."
+        },
+        "chainId": {
+          "type": "string",
+          "description": "The blockchain chain ID to which the wallet is connected."
+        },
+        "connectedAt": {
+          "type": "string",
+          "description": "Timestamp when the wallet was first connected.",
+          "format": "date-time"
+        },
+        "lastUsedAt": {
+          "type": "string",
+          "description": "Timestamp when the wallet connection was last actively used.",
+          "format": "date-time"
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Indicates if this wallet connection is currently active or enabled by the user."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "walletType",
+        "walletAddress",
+        "chainId",
+        "connectedAt",
+        "isActive"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores individual user profiles and KYC data. Access to a user's document is restricted to the authenticated user themselves. Denormalized 'id' field matches the '{userId}' wildcard for direct authorization.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user, matching 'request.auth.uid'."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/fiatAccounts/{fiatAccountId}",
+        "definition": {
+          "entityName": "FiatAccount",
+          "schema": {
+            "$ref": "#/backend/entities/FiatAccount"
+          },
+          "description": "Manages traditional banking (fiat) accounts for each user. Access is limited to the owner of the user ID in the path. Documents include denormalized 'userId' for robust authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who owns this fiat account."
+            },
+            {
+              "name": "fiatAccountId",
+              "description": "The unique ID of the fiat account."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/fiatAccounts/{fiatAccountId}/fiatTransactions/{fiatTransactionId}",
+        "definition": {
+          "entityName": "FiatTransaction",
+          "schema": {
+            "$ref": "#/backend/entities/FiatTransaction"
+          },
+          "description": "Records individual transactions associated with a user's specific fiat account. Documents include denormalized 'userId' for direct authorization without 'get()' calls.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who owns the associated fiat account."
+            },
+            {
+              "name": "fiatAccountId",
+              "description": "The unique ID of the parent fiat account."
+            },
+            {
+              "name": "fiatTransactionId",
+              "description": "The unique ID of the fiat transaction."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/cryptoWallets/{cryptoWalletId}",
+        "definition": {
+          "entityName": "CryptoWallet",
+          "schema": {
+            "$ref": "#/backend/entities/CryptoWallet"
+          },
+          "description": "Stores cryptocurrency wallets managed by a user. Access is limited to the owner of the user ID in the path. Documents include denormalized 'userId' for robust authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who owns this crypto wallet."
+            },
+            {
+              "name": "cryptoWalletId",
+              "description": "The unique ID of the crypto wallet."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/cryptoWallets/{cryptoWalletId}/cryptoHoldings/{cryptoHoldingId}",
+        "definition": {
+          "entityName": "CryptoHolding",
+          "schema": {
+            "$ref": "#/backend/entities/CryptoHolding"
+          },
+          "description": "Details specific cryptocurrency token holdings within a user's crypto wallet. Documents include denormalized 'userId' for direct authorization without 'get()' calls.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who owns the associated crypto wallet."
+            },
+            {
+              "name": "cryptoWalletId",
+              "description": "The unique ID of the parent crypto wallet."
+            },
+            {
+              "name": "cryptoHoldingId",
+              "description": "The unique ID of the crypto holding."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/cryptoWallets/{cryptoWalletId}/cryptoTransactions/{cryptoTransactionId}",
+        "definition": {
+          "entityName": "CryptoTransaction",
+          "schema": {
+            "$ref": "#/backend/entities/CryptoTransaction"
+          },
+          "description": "Records cryptocurrency transactions for a user's specific crypto wallet. Documents include denormalized 'userId' for direct authorization without 'get()' calls.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who owns the associated crypto wallet."
+            },
+            {
+              "name": "cryptoWalletId",
+              "description": "The unique ID of the parent crypto wallet."
+            },
+            {
+              "name": "cryptoTransactionId",
+              "description": "The unique ID of the crypto transaction."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/tradingBots/{tradingBotId}",
+        "definition": {
+          "entityName": "TradingBot",
+          "schema": {
+            "$ref": "#/backend/entities/TradingBot"
+          },
+          "description": "Manages automated trading bots configured by a user. Access is limited to the owner of the user ID in the path. Documents include denormalized 'userId' for robust authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who owns this trading bot."
+            },
+            {
+              "name": "tradingBotId",
+              "description": "The unique ID of the trading bot."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/tradingBots/{tradingBotId}/botTrades/{botTradeId}",
+        "definition": {
+          "entityName": "BotTrade",
+          "schema": {
+            "$ref": "#/backend/entities/BotTrade"
+          },
+          "description": "Records individual trades executed by a user's specific trading bot. CRITICAL: Documents in this collection MUST include a denormalized 'userId' field (matching the path's userId) for authorization independence, as it is not present in the provided schema.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who owns the parent trading bot."
+            },
+            {
+              "name": "tradingBotId",
+              "description": "The unique ID of the parent trading bot."
+            },
+            {
+              "name": "botTradeId",
+              "description": "The unique ID of the bot trade."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/investmentPackages/{packageId}",
+        "definition": {
+          "entityName": "InvestmentPackage",
+          "schema": {
+            "$ref": "#/backend/entities/InvestmentPackage"
+          },
+          "description": "Contains publicly available, predefined investment packages. This collection is globally readable by all authenticated users and represents static, application-wide data.",
+          "params": [
+            {
+              "name": "packageId",
+              "description": "The unique ID of the investment package."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/userInvestments/{userInvestmentId}",
+        "definition": {
+          "entityName": "UserInvestment",
+          "schema": {
+            "$ref": "#/backend/entities/UserInvestment"
+          },
+          "description": "Tracks a user's enrollment and participation in specific investment packages. Access is limited to the owner of the user ID in the path. Documents include denormalized 'userId' for robust authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who made this investment."
+            },
+            {
+              "name": "userInvestmentId",
+              "description": "The unique ID of the user's investment record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/walletConnections/{walletConnectionId}",
+        "definition": {
+          "entityName": "WalletConnection",
+          "schema": {
+            "$ref": "#/backend/entities/WalletConnection"
+          },
+          "description": "Records a user's connections to external Web3 wallets (e.g., MetaMask). Access is limited to the owner of the user ID in the path. Documents include denormalized 'userId' for robust authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who owns this wallet connection."
+            },
+            {
+              "name": "walletConnectionId",
+              "description": "The unique ID of the wallet connection."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed following the core principles of Authorization Independence, Clarity of Intent, DBAC, QAPs, and Invariants. All user-specific data is organized hierarchically under a `/users/{userId}` root path. This strategy ensures that ownership is explicitly encoded in the document path, making security rules simple and highly performant.\n\n**Authorization Independence via Denormalization:**\nFor all user-owned collections and their nested subcollections (e.g., `fiatAccounts`, `cryptoWallets`, `tradingBots`, `userInvestments`, `walletConnections`, `fiatTransactions`, `cryptoHoldings`, `cryptoTransactions`, `botTrades`), the `userId` is either explicitly present in the document's path or, for deeply nested entities, denormalized as a field within the document itself. This is crucial for collections like `BotTrade`, where the `userId` is not intrinsically part of the schema but is vital for authorization. By having `resource.data.userId` readily available in every relevant document, security rules can evaluate access requests without relying on `get()` calls to parent documents. This eliminates hierarchical authorization dependencies, enabling atomic operations (transactions/batches) and significantly simplifying rule debugging.\n\n**QAPs (Rules are not Filters) through Structural Segregation:**\nSecurity rules are designed to enforce authorization at the data storage level, not to filter results after an overly broad query. This is achieved through **Structural Segregation**. User-specific data is strictly confined to `/users/{userId}/...` paths. When a user queries `fiatAccounts` for their own ID (e.g., `/users/{request.auth.uid}/fiatAccounts`), the query inherently targets only their owned documents. The `request.auth.uid` is matched against the `{userId}` wildcard in the path, ensuring that `list` operations naturally return only authorized results without needing additional rule-based filtering. For global entities like `InvestmentPackage`, which are intended to be publicly readable, they reside in a top-level collection (`/investmentPackages`). This clear separation of homogeneous security postures for different data types simplifies rules, making `list` operations efficient and secure by design."
+  }
+}
